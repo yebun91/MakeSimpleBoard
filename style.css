@@ -1,0 +1,43 @@
+:root {
+  /* color */
+  --background-color: #e7e7e7;
+  --sideBackground-color: #bbc9e2;
+  --black-color: #2b2f36;
+  --semiBlack-color: #595f68;
+  --blue-color: #526399;
+  --yellow-color: #ffb727;
+
+  /* font size */
+  --font-large: 48px;
+  --font-medium: 28px;
+  --font-small: 16px;
+  --font-micro: 14px;
+
+  /* font weight */
+  --weight-bold: 700;
+  --weight-regular: 400;
+}
+
+h1 {
+  font-size: var(--font-large);
+  font-weight: var(--weight-bold);
+  color: var(--black-color);
+}
+
+h2 {
+  font-size: var(--font-medium);
+  font-weight: var(--weight-regular);
+  color: var(--semiBlack-color);
+}
+
+p {
+  font-size: var(--font-small);
+  font-weight: var(--weight-regular);
+  color: var(--black-color);
+}
+
+/* 본문설정 */
+
+#navbar {
+  display: flex;
+}
