@@ -4,7 +4,7 @@
   --sideBackground-color: #bbc9e2;
   --black-color: #2b2f36;
   --semiBlack-color: #595f68;
-  --blue-color: #526399;
+  --blue-color: #5d7adb;
   --yellow-color: #ffb727;
 
   /* font size */
@@ -22,10 +22,11 @@ h1 {
   font-size: var(--font-large);
   font-weight: var(--weight-bold);
   color: var(--black-color);
+  margin-bottom: 0;
 }
 
 h2 {
-  font-size: var(--font-medium);
+  font-size: var(--font-micro);
   font-weight: var(--weight-regular);
   color: var(--semiBlack-color);
 }
@@ -36,8 +37,34 @@ p {
   color: var(--black-color);
 }
 
+a:link {
+  color: var(--black-color);
+  text-decoration: none;
+}
+a:visited {
+  color: var(--semiBlack-color);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--blue-color);
+  text-decoration: none;
+}
+
 /* 본문설정 */
 
+body {
+  width: 850px;
+  margin: 0 auto;
+  text-align: center;
+}
 #navbar {
   display: flex;
+  justify-content: space-between;
+}
+.write {
+  text-align: right;
+}
+.list {
+  border: 1px solid var(--blue-color);
+  height: 500px;
 }
