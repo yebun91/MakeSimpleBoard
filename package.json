@@ -1,0 +1,27 @@
+{
+  "name": "makesimpleboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sanitize-html": "^2.3.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yebun91/MakeSimpleBoard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yebun91/MakeSimpleBoard/issues"
+  },
+  "homepage": "https://github.com/yebun91/MakeSimpleBoard#readme"
+}

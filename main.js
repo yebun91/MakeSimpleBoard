@@ -4,6 +4,8 @@ const url = require('url');
 const qs = require('querystring');
 const template = require('./lib/template.js');
 const path = require('path');
+const sanitizeHtml = require('sanitize-html');
+
 
 const app = http.createServer(function(request,response){
   const _url = request.url;
@@ -26,11 +28,15 @@ const app = http.createServer(function(request,response){
         const filteredId = path.parse(queryData.id).base;
         fs.readFile(`data/${filteredId}`, `utf8`, function(err, description){
           const list = template.list(filelist);
-          const html = template.html(title, list, 
-          `<div id = "text"><p>${description}</p></div>`, 
-          `<a href = "/update?id=${title}">수정</a>
+          const sanitizeTitle = sanitizeHtml(title);
+          const sanitizeDescription = sanitizeHtml(description, {
+            allowedTags:['h1']
+          });
+          const html = template.html(sanitizeTitle, list, 
+          `<div id = "text"><p>${sanitizeDescription}</p></div>`, 
+          `<a href = "/update?id=${sanitizeTitle}">수정</a>
           <form action="delete_process" method="post">
-            <input type="hidden" name="id" value="${title}">
+            <input type="hidden" name="id" value="${sanitizeTitle}">
             <input type="submit" value="삭제">
           </form>`
           );
@@ -75,8 +81,8 @@ const app = http.createServer(function(request,response){
     const filtereID = path.parse(title).base;
     fs.readdir('./data', function(err, filelist){
       fs.readFile(`data/${filtereID}`, 'utf8', function(err, description){
-        const list = temlpateList(filelist);
-        const template = templateHTML(title, list, 
+        const list = template.list(filelist);
+        const html = template.html(title, list, 
           `<form action="/update_process" method="post">
             <input type="hidden" name="id" value="${title}">
             <p><input type="text" name="title" placeholder="제목" value="${title}"></p>
@@ -90,7 +96,7 @@ const app = http.createServer(function(request,response){
           `, 
           `<a href="/update?id=${title}">글수정</a>`);
         response.writeHead(200);
-        response.end(template);
+        response.end(html);
       });
     });
   } else if(pathname === '/update_process'){
