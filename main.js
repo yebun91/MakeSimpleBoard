@@ -2,135 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const qs = require('querystring');
-
-function templateHTML(title, list, body, control){
-  return `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"/>
-    <title>${title}</title>
-  </head>
-  <body>
-    <nav id="navbar">
-      <span>
-        <span>
-          <a href="/">자유게시판</a>
-        </span>
-        <span>
-          <a href="http://*">이미지게시판</a>
-        </span>
-      </span>
-      <span>
-        <span>
-          <a href="http://">회원가입 / 로그인</a>
-        </span>
-      </span>
-    </nav>
-    <head id="head">
-      <a href="/"><h1>자유게시판</h1></a>
-      <h2>자유롭게 사용할 수 있는 게시판 입니다.</h2>
-    </head>
-    <div id="write">
-      <a href="/write">글쓰기</a>
-    </div>
-    <div id="list">
-      <ul>
-        <li>
-            <a class="listCategory" href="http://">유머</a>
-            <span class="listTitlep">${title}</span>
-            <a class="listComent" href="http://">16</a>
-        </li>
-      </ul>
-    </div>
-      ${body}
-      ${control}
-    <div id="list">
-      ${list}
-    </div>
-    <ul id="indexs">
-      <a href="http://">1</a>
-      <a href="http://">2</a>
-      <a href="http://">3</a>
-      <a href="http://">4</a>
-    </ul>
-  </body>
-  </html>
-  `;
-}
-function mainHTML(title, list, body){
-  return `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"/>
-    <title>${title}</title>
-  </head>
-  <body>
-    <nav id="navbar">
-      <span>
-        <span>
-          <a href="/">자유게시판</a>
-        </span>
-        <span>
-          <a href="http://*">이미지게시판</a>
-        </span>
-      </span>
-      <span>
-        <span>
-          <a href="http://">회원가입 / 로그인</a>
-        </span>
-      </span>
-    </nav>
-    <head id="head">
-      <a href="/"><h1>자유게시판</h1></a>
-      <h2>자유롭게 사용할 수 있는 게시판 입니다.</h2>
-    </head>
-    <div id="write">
-      <a href="/write">글쓰기</a>
-      ${body}
-    </div>
-    <div id="list">
-      ${list}
-    </div>
-    <ul id="indexs">
-      <a href="http://">1</a>
-      <a href="http://">2</a>
-      <a href="http://">3</a>
-      <a href="http://">4</a>
-    </ul>
-  </body>
-  </html>`;
-}
-function temlpateList(filelist){
-  let list = `<ul>`;
-  let i = 0;
-  while(i < filelist.length){
-    list = list + `
-      <li>
-        <div class="listWarp">
-          <div class="listTitle">
-            <a class="listCategory" href="http://">유머</a>
-            <a class="listTitle" href="/?id=${filelist[i]}">${filelist[i]}</a>
-            <a class="listComent" href="">16</a>
-          </div>
-          <div class="listInfo">
-            <span class="infoPageViwe">조회수 - 1,323</span>
-            <span class="infoDate">등록 - 21.04.07</span>
-          </div>
-        </div>
-      </li>`
-    i = i+1;
-  }
-  list = list+`</ul>`;
-  return list;
-}
+const template = require('./lib/template.js');
+const path = require('path');
 
 const app = http.createServer(function(request,response){
   const _url = request.url;
@@ -142,17 +15,18 @@ const app = http.createServer(function(request,response){
     if(title === undefined){
       fs.readdir('./data', function(err, filelist){
         const title = 'Simple Board';
-        const list = temlpateList(filelist);
-        const template = mainHTML(title, list, ``);
+        const list = template.list(filelist);
+        const html = template.mainHtml(title, list, '');
         response.writeHead(200);
-        response.end(template);
+        response.end(html);
       });
       
     } else {
-      fs.readFile(`data/${title}`, `utf8`, function(err, description){
-        fs.readdir('./data', function(err, filelist){
-          const list = temlpateList(filelist);
-          const template = templateHTML(title, list, 
+      fs.readdir('./data', function(err, filelist){
+        const filteredId = path.parse(queryData.id).base;
+        fs.readFile(`data/${filteredId}`, `utf8`, function(err, description){
+          const list = template.list(filelist);
+          const html = template.html(title, list, 
           `<div id = "text"><p>${description}</p></div>`, 
           `<a href = "/update?id=${title}">수정</a>
           <form action="delete_process" method="post">
@@ -161,15 +35,15 @@ const app = http.createServer(function(request,response){
           </form>`
           );
           response.writeHead(200);
-          response.end(template);
+          response.end(html);
         });
       });
     }
   } else if(pathname === '/write') {
     fs.readdir('./data', function(err, filelist){
       const title = 'WEB - write';
-      const list = temlpateList(filelist);
-      const template = mainHTML(title, list, `
+      const list = template.list(filelist);
+      const html = template.mainHtml(title, list, `
       <form action='/write_process' method="post">
         <p><input type="text" name="title" placeholder="제목"></p>
         <p>
@@ -181,7 +55,7 @@ const app = http.createServer(function(request,response){
           </form>
       `,'');
       response.writeHead(200);
-      response.end(template);
+      response.end(html);
     });
   } else if(pathname === '/write_process') {
     let body = '';
@@ -198,8 +72,9 @@ const app = http.createServer(function(request,response){
       })
     });
   } else if(pathname ==='/update') {
+    const filtereID = path.parse(title).base;
     fs.readdir('./data', function(err, filelist){
-      fs.readFile(`data/${title}`, 'utf8', function(err, description){
+      fs.readFile(`data/${filtereID}`, 'utf8', function(err, description){
         const list = temlpateList(filelist);
         const template = templateHTML(title, list, 
           `<form action="/update_process" method="post">
@@ -241,13 +116,14 @@ const app = http.createServer(function(request,response){
         body = body + data;
     });
     request.on('end', function(){
-        const post = qs.parse(body);
-        const id = post.id;
-        fs.unlink(`data/${id}`, function(err){
-          response.writeHead(302, {Location: `/`});
-          response.end();
-        })
-    });  
+      const post = qs.parse(body);
+      const id = post.id;
+      const filteredId = path.parse(id).base;
+      fs.unlink(`data/${filteredId}`, function(error){
+        response.writeHead(302, {Location: `/`});
+        response.end();
+      });
+  }); 
   } else {
     response.writeHead(404);
     response.end('Not found');
