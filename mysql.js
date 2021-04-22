@@ -1,5 +1,5 @@
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
+const mysql      = require('mysql');
+const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : '7895',
@@ -8,9 +8,11 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
+connection.query('SELECT * from topic', function (error, results, fields) {
+  if (error){
+    console.log(error);
+  } 
+  console.log(results);
 });
 
 connection.end();
