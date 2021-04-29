@@ -37,14 +37,15 @@ app.get('/page/:pageId', (request, response) => {
       const list = template.list(topics);
       const html = template.html(title, list, 
         /*`<div id = "text"><p>${description}</p><p>by ${topic[0].name}</p></div>`, 글쓴 사람도 표시해줌*/ 
-        `<div id = "text"><p>${description}</p></div>`, 
-        `<div class = "text_modify">
-          <a href = "/update/${request.params.pageId}">수정</a>
-          <form action="/delete_process" method="post">
-            <input type="hidden" name="id" value="${request.params.pageId}">
-            <input type="submit" value="삭제">
-          </form>
-        </div>`);
+        `<div id = "text">
+          <p>${description}</p>
+          <div class = "text_modify">
+            <a href = "/update/${request.params.pageId}">수정</a>
+            <form class = "delete" action="/delete_process" method="post">
+              <input type="hidden" name="id" value="${request.params.pageId}">
+              <input type="submit" value="삭제">
+            </form>
+        </div>`,``);
       response.send(html);
     })
   });
@@ -54,15 +55,23 @@ app.get('/write', (request, response) => {
     const title = 'WEB - write';
     const list = template.list(topics);
     const html = template.mainHtml(title, list, `
-    <form action='/write_process' method="post">
-      <p><input type="text" name="title" placeholder="제목"></p>
+    <form class= "write_form" action='/write_process' method="post">
+      <p><input class = "title_text" type="text" name="title" placeholder="제목" 
+        style = "width: -webkit-fill-available; 
+        padding: 10px; 
+        border: 1px solid #5d7adb;"></p>
       <p>
-        <textarea name="description" placeholder="내용"></textarea>
+        <textarea class= "write_form_description" name="description"
+          style = "width: -webkit-fill-available; 
+          height: 500px;
+          padding: 10px; 
+          border: 1px solid #5d7adb;">
+        </textarea>
       </p>
       <p>
-        <input type="submit">
+        <input type="submit" value="완료">
       </p>
-        </form>
+    </form>
     `,'');
     response.send(html);
   });
@@ -100,16 +109,27 @@ app.get('/update/:pageId', (request, response) => {
         `
         <form action="/update_process" method="post">
           <input type="hidden" name="id" value="${topic[0].id}">
-          <p><input type="text" name="title" placeholder="title" value="${topic[0].title}"></p>
+          <p><input type="text" name="title" placeholder="title" 
+            style = "width: -webkit-fill-available; 
+            padding: 10px; 
+            border: 1px solid #5d7adb;"
+            value="${topic[0].title}"></p>
           <p>
-            <textarea name="description" placeholder="description">${topic[0].description}</textarea>
+            <textarea style = "width: -webkit-fill-available; 
+              height: 500px;
+              padding: 10px; 
+              border: 1px solid #5d7adb;"
+            name="description" 
+            placeholder="description">
+              ${topic[0].description}
+            </textarea>
           </p>
           <p>
-            <input type="submit">
+            <input type="submit" class="update_submit" value="수정하기">
           </p>
         </form>
         `,
-        `<a href="/create">create</a> <a href="/update?id=${topic[0].id}">update</a>`
+        ``
       );
       response.send(html);
     });
