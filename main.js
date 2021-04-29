@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const template = require('./lib/template.js');
 const qs = require('querystring');
+app.use(express.static('public'));
 const mysql = require('mysql');
 const db = mysql.createConnection({
   host     : 'localhost',
@@ -35,12 +36,15 @@ app.get('/page/:pageId', (request, response) => {
       const description = topic[0].description;
       const list = template.list(topics);
       const html = template.html(title, list, 
-        `<div id = "text"><p>${description}</p><p>by ${topic[0].name}</p></div>`, 
-        `<a href = "/update/${request.params.pageId}">수정</a>
-        <form action="/delete_process" method="post">
-          <input type="hidden" name="id" value="${request.params.pageId}">
-          <input type="submit" value="삭제">
-        </form>`);
+        /*`<div id = "text"><p>${description}</p><p>by ${topic[0].name}</p></div>`, 글쓴 사람도 표시해줌*/ 
+        `<div id = "text"><p>${description}</p></div>`, 
+        `<div class = "text_modify">
+          <a href = "/update/${request.params.pageId}">수정</a>
+          <form action="/delete_process" method="post">
+            <input type="hidden" name="id" value="${request.params.pageId}">
+            <input type="submit" value="삭제">
+          </form>
+        </div>`);
       response.send(html);
     })
   });
