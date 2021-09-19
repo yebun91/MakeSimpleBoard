@@ -61,12 +61,12 @@ app.get('/write', (request, response) => {
         padding: 10px; 
         border: 1px solid #5d7adb;"></p>
       <p>
-        <textarea class= "write_form_description" name="description"
-          style = "width: -webkit-fill-available; 
-          height: 500px;
-          padding: 10px; 
-          border: 1px solid #5d7adb;">
-        </textarea>
+<textarea class= "write_form_description" name="description"
+style = "width: -webkit-fill-available; 
+height: 500px;
+padding: 10px; 
+border: 1px solid #5d7adb;">
+</textarea>
       </p>
       <p>
         <input type="submit" value="완료">
